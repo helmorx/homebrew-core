@@ -105,7 +105,6 @@ class TclTk < Formula
     end
 
     args = %W[
-      --prefix=#{prefix}
       --includedir=#{include}/tcl-tk
       --mandir=#{man}
       --disable-zipfs
@@ -115,7 +114,8 @@ class TclTk < Formula
 
     ENV["TCL_PACKAGE_PATH"] = "#{HOMEBREW_PREFIX}/lib"
     cd "unix" do
-      system "./configure", *args, "--with-system-libtommath"
+      args << "--disable-zipfs" if OS.linux?
+      system "./configure", *args, "--with-system-libtommath", *std_configure_args
       system "make"
       system "make", "install"
       system "make", "install-private-headers"
@@ -128,7 +128,7 @@ class TclTk < Formula
     resource("tk").stage do
       cd "unix" do
         args << "--enable-aqua=yes" if OS.mac?
-        system "./configure", *args, "--without-x", "--with-tcl=#{lib}"
+        system "./configure", *args, "--without-x", "--with-tcl=#{lib}", *std_configure_args
         system "make"
         system "make", "install"
         system "make", "install-private-headers"
@@ -141,7 +141,7 @@ class TclTk < Formula
     end
 
     resource("tcllib").stage do
-      system "./configure", "--prefix=#{prefix}", "--mandir=#{man}"
+      system "./configure", "--mandir=#{man}", *std_configure_args
       system "make", "install"
       system "make", "critcl"
       cp_r "modules/tcllibc", "#{lib}/"
@@ -150,11 +150,11 @@ class TclTk < Formula
 
     resource("tcltls").stage do
       system "./configure", "--with-openssl-dir=#{formula_opt_prefix("openssl@3")}",
-                            "--prefix=#{prefix}",
                             "--with-tcl=#{lib}",
                             "--with-tclinclude=#{include}/tcl-tk",
                             "--includedir=#{include}/tcl-tk",
-                            "--mandir=#{man}"
+                            "--mandir=#{man}",
+                            *std_configure_args
       system "make", "install"
     end
 
@@ -165,7 +165,6 @@ class TclTk < Formula
       Pathname.pwd.install_symlink buildpath/"pkgs/#{itcl_dir.basename}/tclconfig"
 
       args = %W[
-        --prefix=#{prefix}
         --exec-prefix=#{prefix}
         --with-tcl=#{lib}
         --with-tclinclude=#{include}/tcl-tk
@@ -173,7 +172,7 @@ class TclTk < Formula
         --with-tkinclude=#{include}/tcl-tk
         --with-itcl=#{itcl_dir}
       ]
-      system "./configure", *args
+      system "./configure", *args, *std_configure_args
       system "make"
       system "make", "install"
     end
