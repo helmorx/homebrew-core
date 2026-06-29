@@ -2,8 +2,8 @@ class Ponyc < Formula
   desc "Object-oriented, actor-model, capabilities-secure programming language"
   homepage "https://www.ponylang.io/"
   url "https://github.com/ponylang/ponyc.git",
-      tag:      "0.64.0",
-      revision: "f5fddde63d8af22d0b39c4b3d417f34d3f7594ef"
+      tag:      "0.66.0",
+      revision: "e7d0d0bcea543f8978ea7ad7987d63f03908de50"
   license "BSD-2-Clause"
 
   bottle do
